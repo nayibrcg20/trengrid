@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- ETIQUETA DE VERIFICACIÓN DE GOOGLE ADSENSE -->
+    <meta name="google-adsense-account" content="ca-pub-3331146151520457">
+
+    <meta name="description" content="Discover viral YouTube, TikTok, and Instagram niches. Analyze High-RPM faceless channel ideas, View-Per-Hour metrics, and cross-platform arbitrage opportunities.">
+    <meta name="keywords" content="viral niches, high rpm youtube, faceless channel ideas, tiktok arbitrage, content creator tools">
+    <meta name="robots" content="index, follow">
+
+    <title>TrendGrid | Viral Niche & Video Discovery Tool</title>
+
+    <style>
+        :root {
+            --bg: #09090b;
+            --surface: rgba(24, 24, 27, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
+            --text-article: #cbd5e1;
+            --muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --tiktok: #ff0050;
+            --youtube: #ff0000;
+            --instagram: #e1306c;
+            --font-main: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .article-container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar */
+        header {
+            border-bottom: 1px solid var(--surface-border);
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 0;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #6366f1, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .nav-links a:hover { color: var(--text); }
+
+        /* Views */
+        .view { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .view.active { display: block; opacity: 1; }
+
+        /* Hero Section */
+        .hero { text-align: center; padding: 60px 0 40px; }
+        .hero h1 { font-size: 3rem; line-height: 1.2; margin-bottom: 15px; }
+        .hero p { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; }
+
+        /* Search & Filters */
+        .search-bar { display: flex; gap: 10px; max-width: 700px; margin: 0 auto 40px; }
+        .search-input {
+            flex: 1; padding: 16px 24px; border-radius: 12px; border: 1px solid var(--surface-border);
+            background: var(--surface); color: var(--text); font-size: 1rem;
+            backdrop-filter: blur(10px); outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--accent); }
+        .filter-btn {
+            padding: 0 24px; border-radius: 12px; border: none; background: var(--accent);
+            color: white; font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .filter-btn:hover { background: var(--accent-hover); }
+
+        .toggle-group { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
+        .toggle-btn {
+            background: transparent; border: 1px solid var(--surface-border); color: var(--muted);
+            padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.2s;
+        }
+        .toggle-btn.active { background: var(--surface-border); color: var(--text); border-color: var(--muted); }
+
+        /* Data Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-bottom: 60px; }
+        .card {
+            background: var(--surface); border: 1px solid var(--surface-border); border-radius: 16px;
+            padding: 24px; backdrop-filter: blur(10px); transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+        .badge.yt { background: rgba(255,0,0,0.1); color: var(--youtube); border: 1px solid rgba(255,0,0,0.2); }
+        .badge.tt { background: rgba(255,0,80,0.1); color: var(--tiktok); border: 1px solid rgba(255,0,80,0.2); }
+        .badge.ig { background: rgba(225,48,108,0.1); color: var(--instagram); border: 1px solid rgba(225,48,108,0.2); }
+        .card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.3; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+        .metric { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid var(--surface-border); }
+        .metric-label { display: block; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+        .metric-value { font-size: 1.1rem; font-weight: 700; font-family: monospace; }
+        .metric-value.green { color: var(--success); }
+        .metric-value.yellow { color: var(--warning); }
+        .metric-value.red { color: var(--danger); }
+        .hook-box { background: rgba(99, 102, 241, 0.05); border: 1px dashed rgba(99, 102, 241, 0.3); padding: 12px; border-radius: 8px; font-size: 0.85rem; }
+        .hook-box strong { color: var(--accent); display: block; margin-bottom: 4px; }
+        .arbitrage-alert { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; gap: 6px; }
+
+        /* Blog Section */
+        .seo-section { padding: 60px 0; border-top: 1px solid var(--surface-border); }
+        .section-title { font-size: 2rem; margin-bottom: 30px; text-align: center; }
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .blog-card {
+            background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px;
+            padding: 25px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .blog-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .blog-meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .blog-meta span.author { color: var(--accent); font-weight: 600; }
+        .blog-card h3 { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
+        .blog-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+        .read-more { color: var(--accent); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
+
+        /* Full Article View */
+        .article-header { margin: 40px 0 30px; }
+        .back-btn { background: none; border: none; color: var(--accent); font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 5px; }
+        .back-btn:hover { text-decoration: underline; }
+        .article-header h1 { font-size: 2.8rem; line-height: 1.2; margin-bottom: 15px; }
+        .article-author-info { display: flex; align-items: center; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid var(--surface-border); margin-bottom: 30px; }
+        .author-avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(to bottom right, #6366f1, #10b981); display: grid; place-items: center; font-weight: bold; font-size: 1.2rem; }
+        .author-details strong { display: block; font-size: 1.05rem; }
+        .author-details span { color: var(--muted); font-size: 0.85rem; }
+        
+        .article-body { font-size: 1.15rem; color: var(--text-article); line-height: 1.8; padding-bottom: 60px; }
+        .article-body h2 { color: #fff; font-size: 1.8rem; margin: 40px 0 20px; line-height: 1.3; }
+        .article-body h3 { color: #fff; font-size: 1.4rem; margin: 30px 0 15px; }
+        .article-body p { margin-bottom: 20px; }
+        .article-body ul, .article-body ol { margin-bottom: 20px; padding-left: 20px; }
+        .article-body li { margin-bottom: 10px; }
+
+        /* Ad Slots */
+        .ad-slot {
+            width: 100%; min-height: 120px; background: var(--surface); border: 1px dashed var(--muted);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin: 40px 0;
+        }
+
+        /* Footer & Modals */
+        footer { border-top: 1px solid var(--surface-border); padding: 40px 0; text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin-top: 15px; }
+        .footer-links button { border: none; background: none; color: var(--muted); text-decoration: underline; cursor: pointer; font-weight: 500; font-size: 0.9rem; }
+        .footer-links button:hover { color: var(--text); }
+
+        .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,.8); backdrop-filter: blur(4px); z-index: 2000; }
+        .modal.active { display: flex; }
+        .modal-content { width: min(650px, 100%); max-height: 85vh; overflow-y: auto; padding: 35px; border-radius: 14px; background: #18181b; border: 1px solid var(--surface-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--surface-border); padding-bottom: 15px; }
+        .modal-header h2 { margin: 0; font-size: 1.5rem; color: var(--text); }
+        .close { border: none; background: none; color: var(--muted); font-size: 28px; cursor: pointer; line-height: 1; }
+        .close:hover { color: var(--text); }
+        .modal-content p { color: var(--muted); margin-bottom: 15px; }
+        .modal-content strong { color: var(--text); }
+        .btn-primary { background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; margin-top: 10px; transition: background 0.2s; border: none; cursor: pointer;}
+        .btn-primary:hover { background: var(--accent-hover); }
+
+        /* Cookie Banner Styles */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--surface-border); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); z-index: 1500; transform: translateY(100%); transition: transform 0.4s ease; flex-wrap: wrap; gap: 15px; }
+        .cookie-banner.show { transform: translateY(0); }
+        .cookie-banner p { margin: 0; font-size: 0.9rem; flex: 1; min-width: 280px; color: var(--text); }
+        .cookie-banner button.link { background: none; border: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; font-weight: 600; }
+        .cookie-banner .accept-btn { background: var(--accent); color: white; border: none; padding: 8px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+        .cookie-banner .accept-btn:hover { background: var(--accent-hover); }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .article-header h1 { font-size: 2.2rem; }
+            .search-bar { flex-direction: column; }
+            .filter-btn { padding: 16px; }
+            .nav-links { display: none; }
+            .blog-grid { grid-template-columns: 1fr; }
+            .cookie-banner { flex-direction: column; text-align: center; }
+            .cookie-banner .accept-btn { width: 100%; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-content">
+            <div class="logo" onclick="showView('home-view')">TrendGrid</div>
+            <nav class="nav-links">
+                <a onclick="showView('home-view')">Discovery Tool</a>
+                <a href="#creator-academy" onclick="showView('home-view')">Creator Academy</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN HOME VIEW -->
+    <main id="home-view" class="view active">
+        <div class="container">
+            <section class="hero">
+                <h1>Discover Viral Opportunities Before They Peak</h1>
+                <p>Analyze real-time View-Per-Hour metrics, calculate High-RPM faceless niches, and exploit cross-platform arbitrage across YouTube, TikTok, and Instagram.</p>
+            </section>
+
+            <section id="discovery">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search for niches, topics, or keywords (e.g., 'Finance', 'Gadgets')...">
+                    <button class="filter-btn" onclick="filterData()">Analyze Trends</button>
+                </div>
+
+                <div class="toggle-group">
+                    <button class="toggle-btn active" id="btn-all" onclick="setFilter('all')">All Results</button>
+                    <button class="toggle-btn" id="btn-niche" onclick="setFilter('niche')">Broad Niches</button>
+                    <button class="toggle-btn" id="btn-video" onclick="setFilter('video')">Specific Viral Videos</button>
+                </div>
+
+                <div class="grid" id="dataGrid">
+                    <!-- JavaScript will populate cards here -->
+                </div>
+            </section>
+
+            <div class="ad-slot" aria-hidden="true">Google AdSense Horizontal Banner</div>
+
+            <!-- SEO Optimized Articles Directory -->
+            <section id="creator-academy" class="seo-section">
+                <h2 class="section-title">Creator Academy Articles</h2>
+                <div class="blog-grid" id="blogGrid">
+                    <!-- JavaScript will populate blog cards here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ARTICLE VIEW -->
+    <main id="article-view" class="view">
+        <div class="article-container">
+            <div class="article-header">
+                <button class="back-btn" onclick="showView('home-view')">← Back to Dashboard</button>
+                <h1 id="article-title">Article Title</h1>
+                <div class="article-author-info">
+                    <div class="author-avatar">NC</div>
+                    <div class="author-details">
+                        <strong id="article-author">Nayib Contreras</strong>
+                        <span id="article-date">Published • 5 min read</span>
+                    </div>
+                </div>
+            </div>
+            <div class="article-body" id="article-content">
+                <!-- Article content gets injected here -->
+            </div>
+            
+            <div class="ad-slot" aria-hidden="true">Google AdSense In-Article Slot</div>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <button class="btn-primary" onclick="showView('home-view')">Back to TrendGrid Discovery</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER WITH LEGAL LINKS -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 TrendGrid. Data-driven insights for content creators.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Disclaimer: RPM estimations are approximate and based on industry averages. Not affiliated with Google, TikTok, or Meta.</p>
+            
+            <div class="footer-links">
+                <button onclick="document.getElementById('privacyModal').classList.add('active')">Privacy Policy</button>
+                <button onclick="document.getElementById('termsModal').classList.add('active')">Terms of Service</button>
+                <button onclick="document.getElementById('contactModal').classList.add('active')">Contact Us</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- COOKIE BANNER -->
+    <div id="cookieBanner" class="cookie-banner">
+        <p>We use cookies to serve personalized ads and analyze traffic. By continuing, you agree to our <button class="link" onclick="document.getElementById('privacyModal').classList.add('active')">Privacy Policy</button>.</p>
+        <button id="acceptCookies" class="accept-btn">Got it</button>
+    </div>
+
+    <!-- MODALS -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Privacy Policy</h2>
+                <button class="close" onclick="document.getElementById('privacyModal').classList.remove('active')">&times;</button>
+            </div>
+            <p><strong>1. Data Collection:</strong> TrendGrid aggregates public data from various social media platforms. We do not require account creation, and we do not collect personally identifiable information (PII) from our visitors.</p>
+            <p><strong>2. Third-Party Advertisers:</strong> To keep this tool free, we use advertising networks like Google AdSense. These networks may use cookies to serve personalized ads based on your browsing history.</p>
+            <p>You can manage your ad preferences directly through your Google Ads Settings dashboard.</p>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Terms of Service</h2>
+                <button class="close" onclick="document.getElementById('termsModal').classList.remove('active')">&times;</button>
+            </div>
+            <p>TrendGrid is provided "as is" for informational and research purposes only. The RPM estimations and Saturation Indexes are calculated using proprietary algorithms and industry averages, but do not guarantee financial results.</p>
+            <p>We are not responsible for the performance, demonetization, or algorithmic ranking of any content you create based on our insights. Use this data as a guide, not financial advice.</p>
+        </div>
+    </div>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Contact Us</h2>
+                <button class="close" onclick="document.getElementById('contactModal').classList.remove('active')">&times;</button>
+            </div>
+            <p>Want to suggest a new niche, report a bug, or inquire about advertising opportunities?</p>
+            <p>Our team is ready to help you navigate the algorithm.</p>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="mailto:contact@gadgetgrid.com?subject=TrendGrid%20Inquiry" class="btn-primary">
+                    ✉️ Email Support
+                </a>
+                <p style="font-size: 0.85rem; margin-top: 15px;">contact@gadgetgrid.com</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- COOKIE BANNER LOGIC ---
+        const cookieBanner = document.getElementById('cookieBanner');
+        const acceptCookiesBtn = document.getElementById('acceptCookies');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('trendgrid_cookiesAccepted')) {
+                setTimeout(() => {
+                    cookieBanner.classList.add('show');
+                }, 1000); // Muestra el banner después de 1 segundo
+            }
+        });
+
+        acceptCookiesBtn.addEventListener('click', () => {
+            localStorage.setItem('trendgrid_cookiesAccepted', 'true');
+            cookieBanner.classList.remove('show');
+        });
+
+        // --- 1. MOCK DATA FOR THE DISCOVERY TOOL ---
+        const dbData = [
+            { type: 'niche', title: 'AI Productivity Tools', platform: 'yt', platformLabel: 'YouTube', rpm: '$14.50', saturation: 'Low', satColor: 'green', desc: 'Tutorials on using AI to summarize lectures.', hook: 'Stop studying harder. This AI tool does 90%...', arbitrage: false },
+            { type: 'video', title: 'Cheapest Tech on Amazon', platform: 'tt', platformLabel: 'TikTok', vph: '12,500', saturation: 'High', satColor: 'red', desc: 'Fast-paced unboxing of sub-$10 tech.', hook: 'I bought the weirdest $5 gadgets so you...', arbitrage: '🔥 Arbitrage Alert: High potential on YT Shorts' },
+            { type: 'niche', title: 'Faceless Personal Finance', platform: 'yt', platformLabel: 'YouTube', rpm: '$22.00', saturation: 'Medium', satColor: 'yellow', desc: 'Explaining credit cards using stickman animations.', hook: 'The banks are lying to you about your savings...', arbitrage: false },
+            { type: 'video', title: '3 Websites illegal to know', platform: 'ig', platformLabel: 'Instagram', vph: '8,300', saturation: 'Medium', satColor: 'yellow', desc: 'Screen recording of useful web tools.', hook: 'Here are 3 secret websites that feel illegal...', arbitrage: '🔥 Arbitrage Alert: Adapt for TikTok' }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderCards(data) {
+            const grid = document.getElementById('dataGrid');
+            grid.innerHTML = '';
+            if(data.length === 0) {
+                grid.innerHTML = '<p style="color: var(--muted); grid-column: 1/-1; text-align:center;">No trends found matching your search.</p>';
+                return;
+            }
+            data.forEach(item => {
+                let metricsHtml = item.type === 'niche' ? 
+                    `<div class="metric"><span class="metric-label">Est. RPM</span><span class="metric-value green">${item.rpm}</span></div>
+                     <div class="metric"><span class="metric-label">Saturation</span><span class="metric-value ${item.satColor}">${item.saturation}</span></div>` :
+                    `<div class="metric"><span class="metric-label">Views Per Hour</span><span class="metric-value">${item.vph}</span></div>
+                     <div class="metric"><span class="metric-label">Saturation</span><span class="metric-value ${item.satColor}">${item.saturation}</span></div>`;
+                
+                let extraHtml = item.arbitrage ? `<div class="arbitrage-alert">🚀 ${item.arbitrage}</div>` : '';
+
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="badge ${item.platform}">${item.platformLabel}</span>
+                            <span style="font-size: 0.75rem; color: var(--muted);">${item.type === 'niche' ? 'BROAD NICHE' : 'VIRAL VIDEO'}</span>
+                        </div>
+                        <div class="card-title">${item.title}</div>
+                        <p style="font-size: 0.9rem; color: var(--muted);">${item.desc}</p>
+                        <div class="metrics-grid">${metricsHtml}</div>
+                        <div class="hook-box"><strong>Suggested Hook:</strong>"${item.hook}"</div>
+                        ${extraHtml}
+                    </div>
+                `;
+            });
+        }
+
+        function setFilter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + type).classList.add('active');
+            filterData();
+        }
+
+        function filterData() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = dbData.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
+                const matchesType = currentFilter === 'all' || item.type === currentFilter;
+                return matchesSearch && matchesType;
+            });
+            renderCards(filtered);
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', filterData);
+        renderCards(dbData);
+
+        // --- 2. BLOG CONTENT & SPA ROUTING ---
+        const articles = {
+            1: {
+                title: "The 2026 Guide to Finding High-RPM YouTube Niches",
+                author: "Nayib Contreras",
+                date: "August 17, 2026 • 6 min read",
+                excerpt: "Views mean nothing if advertisers aren't paying. Learn how to pinpoint niches that pay upwards of $20 per 1,000 views.",
+                content: `
+                    <p>For content creators entering the digital space in 2026, the traditional metric of success—raw view count—is fundamentally flawed. Millions of views on a generic prank video might generate less revenue than a few thousand views on a highly specialized B2B software tutorial. The real metric of financial success on platforms like YouTube is the <strong>RPM (Revenue Per Mille)</strong>, which dictates exactly how much money lands in your pocket for every 1,000 monetized views.</p>
+                    
+                    <h2>Why RPM Varies Drastically Between Niches</h2>
+                    <p>To understand why certain niches pay more, you have to understand the advertiser's intent. Google AdSense operates on an auction system. Advertisers bid for ad placements on videos that target their ideal demographic. If you create a video about "Minecraft Let's Plays," the advertisers bidding on your video are usually selling low-ticket items like energy drinks or video games. Because the profit margin on an energy drink is small, the advertiser can only afford to bid a few cents per click. Consequently, your RPM drops down to $1 or $2.</p>
+                    <p>Conversely, consider a niche like <em>Software as a Service (SaaS) for Enterprise Businesses</em>, or <em>High-Yield Investment Portfolios</em>. The advertisers in these spaces are selling enterprise software licenses that cost $5,000 a year, or financial management services that handle hundreds of thousands of dollars. An advertiser selling a premium product is more than willing to pay $50, $100, or even $200 for a single qualified lead. Because the bids are astronomically high, the creator's RPM skyrockets, frequently hitting between $20 and $50 per 1,000 views.</p>
+                    
+                    <h2>Top High-RPM Niches of 2026</h2>
+                    <p>Based on our internal data at TrendGrid, the highest-paying digital real estate currently revolves around the following categories:</p>
+                    <ul>
+                        <li><strong>Personal Finance and Wealth Management:</strong> Content explaining Roth IRAs, high-yield savings accounts, and tax optimization strategies. Banks and fintech startups spend billions in digital marketing here.</li>
+                        <li><strong>Digital Marketing and E-commerce:</strong> Tutorials on setting up Shopify stores, running Facebook Ads, or optimizing SEO. The audience consists of entrepreneurs willing to spend money to make money.</li>
+                        <li><strong>Tech Gadgets and Software Reviews:</strong> High-end camera equipment, productivity software (like Notion or Asana), and AI tools. Affiliate marketing combined with high AdSense RPM makes this a goldmine.</li>
+                        <li><strong>Web Hosting and Development:</strong> Creating content around setting up WordPress, buying domains, or coding. Tech companies bid heavily to acquire new users with recurring subscriptions.</li>
+                    </ul>
+
+                    <h2>How to Use TrendGrid to Spot Profitability</h2>
+                    <p>Finding a high-RPM niche isn't enough; you must ensure there is still audience demand. This is where the TrendGrid Discovery Tool becomes your unfair advantage. Instead of guessing, you can filter our database to isolate niches that exhibit both high financial yield and low creator saturation.</p>
+                    <p>When you spot a niche marked with a "Green" saturation index and an estimated RPM above $15.00, you have found a blue-ocean opportunity. Your strategy should be to dominate long-tail keywords. Instead of making a video titled "How to invest," which is overly competitive, you create "How to invest in Index Funds for Students in 2026." The narrower the focus, the more qualified the audience, and the higher the advertiser will bid to reach them.</p>
+                    
+                    <h2>Beyond AdSense: The True Power of High-RPM Audiences</h2>
+                    <p>The beauty of building an audience in a high-RPM niche is that AdSense revenue is merely the tip of the iceberg. The viewers watching personal finance or tech tutorials are high-intent buyers. This means your conversion rates for affiliate links, digital courses, and brand sponsorships will be exponentially higher than broader entertainment channels.</p>
+                    <p>In conclusion, stop chasing viral vanity metrics. A faceless channel with 10,000 highly targeted subscribers in the tech or finance sector can easily generate a full-time income, outearning entertainment channels with hundreds of thousands of subscribers. Use data, understand advertiser psychology, and position your content where the money is currently flowing.</p>
+                `
+            },
+            2: {
+                title: "TikTok to YouTube Shorts Arbitrage: The Ultimate Growth Hack",
+                author: "Nayib Contreras",
+                date: "August 16, 2026 • 7 min read",
+                excerpt: "Learn how to exploit the algorithmic delay between platforms to capture massive organic reach using cross-platform arbitrage.",
+                content: `
+                    <p>In the fast-paced world of short-form content, algorithms are king. But what most creators fail to realize is that the algorithms governing TikTok, YouTube Shorts, and Instagram Reels do not operate in perfect unison. There is a distinct, measurable delay between a concept going viral on one platform and that same concept peaking on another. Exploiting this delay is a strategy known as <strong>Cross-Platform Arbitrage</strong>, and it is currently the most effective growth hack for digital creators in 2026.</p>
+                    
+                    <h2>The Mechanics of Algorithmic Delay</h2>
+                    <p>TikTok is widely recognized as the incubator of internet culture. Due to its hyper-responsive "For You" page algorithm, new trends, audio formats, and visual hooks often originate and explode there first. However, the demographic overlap between TikTok and YouTube Shorts is not 100%. Many YouTube users only consume short-form content within the YouTube app.</p>
+                    <p>Because of this isolation, a trend that is already saturating TikTok might be completely unseen on YouTube Shorts. Data suggests there is typically a 48 to 72-hour window before a TikTok trend migrates and saturates YouTube. If you can identify a rising trend on TikTok during its first 12 hours of virality, and immediately adapt that concept for YouTube Shorts, the YouTube algorithm will treat your video as a "first-mover" original concept, rewarding it with massive organic reach.</p>
+                    
+                    <h2>How to Execute Successful Arbitrage</h2>
+                    <p>It is critical to understand that successful arbitrage is <strong>not</strong> simply downloading someone else's TikTok video and uploading it to YouTube. Both platforms have sophisticated AI that detects watermarks, compressed metadata, and duplicated visual hashes. Doing this will result in immediate shadowbans. True arbitrage is about reverse-engineering the <em>framework</em> of the viral video.</p>
+                    <ol>
+                        <li><strong>Identify the Viral Hook:</strong> Use TrendGrid to monitor "Views-Per-Hour" (VPH) on TikTok. When a video spikes to over 10,000 VPH within a few hours of posting, analyze the first 3 seconds. What text is on the screen? What is the opening sentence?</li>
+                        <li><strong>Extract the Pacing and Format:</strong> Does the video use fast jump cuts? Does it use a specific background sound (like a trending synthwave track)? Does it rely on B-roll or face-to-camera interaction?</li>
+                        <li><strong>Recreate and Elevate:</strong> Script your own version using the identical hook structure but with your unique spin or higher-quality visuals. If the original TikTok was a low-quality screen recording of "3 AI Tools for Students," you create a crisp, high-definition version with smooth transitions and better audio.</li>
+                    </ol>
+
+                    <h2>The "Hook-Retention-Reward" Framework</h2>
+                    <p>When migrating a trend to YouTube Shorts, you must optimize for YouTube's specific retention metrics. YouTube prioritizes "Viewed vs. Swiped Away" percentages. To ensure your arbitrage video succeeds, utilize the Hook-Retention-Reward framework.</p>
+                    <p>The <strong>Hook</strong> (Seconds 0-3) must visually and audibly disrupt the user's scrolling pattern. The <strong>Retention</strong> phase (Seconds 3-45) must deliver exactly what the hook promised, using rapid pacing to prevent drop-off. Finally, the <strong>Reward</strong> (Seconds 45-60) provides the ultimate payoff, concluding the video in a way that encourages a loop or a subscription.</p>
+                    
+                    <h2>Managing Music and Copyright</h2>
+                    <p>One of the biggest hurdles in cross-platform arbitrage is audio licensing. A trending sound on TikTok might result in a copyright strike on YouTube. Always prioritize the visual pacing and the spoken script over the background music. When migrating the concept to YouTube, use the YouTube Audio Library to find a tonally similar track that is cleared for monetization.</p>
+                    <p>By mastering cross-platform arbitrage, you essentially eliminate the guesswork of content creation. You allow the TikTok algorithm to act as your testing ground, isolating the winning concepts, and then you capitalize on those proven formats on YouTube Shorts for maximum ad revenue and subscriber growth.</p>
+                `
+            },
+            3: {
+                title: "Top Faceless Channel Ideas for Introverted Creators",
+                author: "Nayib Contreras",
+                date: "August 15, 2026 • 6 min read",
+                excerpt: "You don't need a ring light or a camera presence. Discover the most profitable, automated, faceless YouTube niches of the year.",
+                content: `
+                    <p>The creator economy is often associated with charismatic vloggers, high-energy streamers, and influencer personalities. However, a massive paradigm shift has occurred. Some of the most profitable, highly-scaled channels on YouTube are entirely faceless. For introverted creators, or entrepreneurs who want to build digital assets without tying them to their personal identity, <strong>Faceless YouTube Channels</strong> offer an unprecedented opportunity to generate wealth.</p>
+                    
+                    <h2>The Psychology Behind Faceless Content</h2>
+                    <p>Viewers do not inherently require a human face to remain engaged; they require a compelling narrative and high-quality information. In fact, in certain educational or analytical niches, a face on the screen can actually be a distraction. When a viewer clicks on a video titled "The Collapse of the 2008 Housing Market Explained," they want dynamic charts, historical footage, and a clear voiceover. The focus is entirely on the value of the data being presented.</p>
+                    <p>This allows faceless creators to operate essentially as digital media companies. You can write scripts, generate high-quality voiceovers (or hire voice actors), and edit together stock footage, B-roll, and animations to create a highly polished final product. Because the channel isn't reliant on your physical presence, it is highly scalable. You can eventually outsource every step of the process, effectively automating the channel's production.</p>
+
+                    <h2>Top Performing Faceless Niches in 2026</h2>
+                    <p>If you are looking to launch a faceless channel, data from TrendGrid highlights several niches that consistently yield high retention and excellent RPMs:</p>
+                    
+                    <h3>1. Animated Personal Finance and Business Case Studies</h3>
+                    <p>Channels that use simple 2D animations (like whiteboard or stickman styles) to explain complex financial concepts perform exceptionally well. Topics like "How Apple avoids billions in taxes" or "The psychology of credit card debt" combine storytelling with high-RPM advertiser intent. The animation keeps the viewer visually stimulated while the voiceover delivers immense value.</p>
+                    
+                    <h3>2. Tech Gadget and Software Reviews (Screen-recording & B-Roll)</h3>
+                    <p>You can review productivity software, SaaS platforms, or physical tech gadgets without ever stepping in front of a camera. For software, high-quality screen recordings with clear, step-by-step narration are highly sought after. For physical gadgets, overhead shots of the product (showing only your hands) combined with cinematic B-roll create a premium, trustworthy review aesthetic.</p>
+                    
+                    <h3>3. True Crime and Historical Mysteries</h3>
+                    <p>This is a massive niche driven by human curiosity. The production involves compiling public domain images, archival footage, and newspaper clippings. The success of this niche relies heavily on the script's suspense and the quality of the voiceover. While the RPM is generally lower than finance or tech, the sheer volume of views these videos generate more than makes up for it.</p>
+                    
+                    <h3>4. Interactive Quizzes and Trivia</h3>
+                    <p>One of the easiest formats to produce is the interactive quiz channel. Videos like "Guess the Country by its Flag" or "90s Movies Trivia Quiz" require very simple editing templates. Viewers naturally watch until the end of the video to see their final score, which results in near-perfect audience retention metrics, prompting the algorithm to push the video virally.</p>
+
+                    <h2>The AI Voiceover Dilemma</h2>
+                    <p>With the rapid advancement of Artificial Intelligence, many new creators attempt to use free text-to-speech generators. However, the YouTube algorithm and, more importantly, human viewers have become incredibly adept at identifying robotic, emotionless AI voices. If you choose to use AI, you must invest in premium, high-fidelity voice cloning software and spend time manually adjusting the pacing, pauses, and emotional inflection. Alternatively, investing a small amount of money to hire a human voiceover artist on platforms like Fiverr can drastically increase your channel's perceived quality and retention rate.</p>
+                    <p>Building a faceless channel requires patience. Your early videos will serve as the foundation of your digital library. Focus on evergreen topics—subjects that will be just as relevant five years from now as they are today. Over time, this compounding library of high-quality, faceless content will serve as a continuous, passive revenue stream.</p>
+                `
+            },
+            4: {
+                title: "Understanding the Saturation Index: When to Enter a Viral Niche",
+                author: "Nayib Contreras",
+                date: "August 14, 2026 • 6 min read",
+                excerpt: "Don't get buried by the algorithm. Learn how to calculate supply vs. demand to know exactly when a niche is ripe for the taking.",
+                content: `
+                    <p>Every day, thousands of new content creators upload their first video, hoping to catch the algorithm's favor. The vast majority fail, not because their content is inherently bad, but because their timing is abysmal. They jump into trends that have already peaked. To succeed in the modern digital landscape, you must transition from acting on emotion to acting on data. The most crucial data point in a creator's arsenal is the <strong>Saturation Index</strong>.</p>
+                    
+                    <h2>The Economics of the Algorithm: Supply vs. Demand</h2>
+                    <p>YouTube and TikTok algorithms are fundamentally matching engines governed by the laws of supply and demand. "Demand" represents the audience: how many people are currently searching for or engaging with a specific topic. "Supply" represents the creators: how many videos exist that satisfy that exact topic.</p>
+                    <p>When a new trend emerges—for example, a new AI software is released—demand spikes instantly. However, it takes time for creators to script, record, and edit videos about it, meaning the supply remains low. This creates an algorithmic vacuum. During this window, platforms will push almost any relevant video to millions of viewers because they desperately need content to fulfill the audience's demand. This is the "Green" zone on the Saturation Index.</p>
+                    <p>Fast forward two weeks: every major tech channel has covered the AI software. Supply has caught up to, and eventually exceeded, demand. If you upload a video now, you are entering a "Red" saturation zone. Your video will be buried under thousands of highly-produced competitors, and the algorithm has no incentive to promote an unknown channel over established authorities.</p>
+
+                    <h2>How to Read the Saturation Index on TrendGrid</h2>
+                    <p>TrendGrid calculates saturation by analyzing the velocity of search terms against the upload frequency of specific tags. Here is how you should interpret and act upon the data:</p>
+                    
+                    <h3>🟢 Low Saturation (Green)</h3>
+                    <p>This is the holy grail. A low saturation index combined with climbing View-Per-Hour (VPH) metrics indicates a breakout trend. Your strategy here should be speed. Perfection is the enemy of progress in a Green zone. Get a well-structured, B+ quality video out as quickly as possible to establish yourself as a first-mover. The algorithm will reward your speed with impressions.</p>
+                    
+                    <h3>🟡 Medium Saturation (Yellow)</h3>
+                    <p>The trend is established, and the major players have likely already released their initial videos. To succeed in a Yellow zone, you cannot simply repeat what has already been said. You must find a unique angle or a sub-niche. If the trend is "How to use ChatGPT," your video needs to be "How Architects use ChatGPT to design homes." By narrowing the focus, you create a new micro-vacuum of demand.</p>
+                    
+                    <h3>🔴 High Saturation (Red)</h3>
+                    <p>The market is flooded. Competing on broad terms is mathematically disadvantageous. If you must enter a Red niche because it aligns with your channel's core identity, your only viable strategy is out-competing on sheer quality or leveraging an aggressive, controversial hook that disrupts the established narrative. Often, the best decision in a Red zone is simply to sit out and wait for the next wave.</p>
+
+                    <h2>The Lifecycle of a Trend</h2>
+                    <p>Understanding saturation also involves understanding the lifecycle of a trend. A <em>Micro-Trend</em> (like a meme or a viral audio clip) might go from Green to Red in 72 hours. A <em>Macro-Trend</em> (like the transition to remote work or the rise of electric vehicles) might remain in the Green or Yellow zones for years.</p>
+                    <p>As a data-driven creator, your goal is to build a portfolio of content. Dedicate 20% of your production time to acting fast on short-lived Green micro-trends to spike your channel's traffic. Dedicate the remaining 80% to establishing deep authority in sustainable Macro-trends. By constantly consulting the Saturation Index before hitting record, you ensure that every hour spent editing is an hour invested in a mathematically probable success.</p>
+                `
+            }
+        };
+
+        // Render Blog Grid on Home
+        function renderBlogGrid() {
+            const grid = document.getElementById('blogGrid');
+            for (const [id, article] of Object.entries(articles)) {
+                grid.innerHTML += `
+                    <div class="blog-card" onclick="openArticle(${id})">
+                        <div class="blog-meta">
+                            <span class="author">${article.author}</span>
+                            <span>${article.date.split('•')[1]}</span>
+                        </div>
+                        <h3>${article.title}</h3>
+                        <p>${article.excerpt}</p>
+                        <span class="read-more">Read Full Article →</span>
+                    </div>
+                `;
+            }
+        }
+
+        // SPA Navigation Logic
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0, 0); // Regresa el scroll arriba al cambiar de vista
+        }
+
+        function openArticle(id) {
+            const data = articles[id];
+            document.getElementById('article-title').innerText = data.title;
+            document.getElementById('article-author').innerText = data.author;
+            document.getElementById('article-date').innerText = data.date;
+            document.getElementById('article-content').innerHTML = data.content;
+            
+            showView('article-view');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Initialize Blog
+        renderBlogGrid();
+
+    </script>
+</body>
+</html>
